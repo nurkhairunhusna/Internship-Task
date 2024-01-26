@@ -19,7 +19,7 @@
             margin-bottom: 10px;
             display: inline-block;
             font-weight: bold;
-            color: #004085; /* Dark blue color */
+            color: #004085; 
          }   
 
         .bill-details {
@@ -27,7 +27,7 @@
         }
 
         .unit-text {
-            font-size: 0.9em; /* Adjust the font size as needed */
+            font-size: 0.9em; 
         }
 
 
@@ -61,16 +61,25 @@
                         <button type="submit" name="submit" style="margin-top: 20px; margin-bottom: 20px;" class="btn btn-primary">Calculate</button>
                     </div>
                 </form>
+
                 <?php
+                function calculateTotalCharge($voltage, $current, $rate_sen_kWh) {
+                    $rate_RM = $rate_sen_kWh / 100;
+                    $power = $voltage * $current;
+                    $energy = $power / 1000;
+                    $totalCharge = $energy * $rate_RM;
+                    return array('energy' => $energy, 'rate_RM' => $rate_RM, 'totalCharge' => $totalCharge);
+                }
+
                 if (isset($_POST['submit'])) {
                     $voltage = $_POST['voltage'];
                     $current = $_POST['current'];
                     $rate_sen_kWh = $_POST['rate'];
-                    $rate_RM = $rate_sen_kWh / 100;
 
-                    $power = $voltage * $current;
-                    $energy = ($power / 1000);
-                    $totalCharge = $energy * ($rate_RM);
+                    $calculatedValues = calculateTotalCharge($voltage, $current, $rate_sen_kWh);
+                    $energy = $calculatedValues['energy'];
+                    $rate_RM = $calculatedValues['rate_RM'];
+                    $totalCharge = $calculatedValues['totalCharge'];
 
                     echo "<div class='power-rate-container'>";
                     echo "<strong>POWER:</strong> <strong style='font-weight: bold; color: #004085;'>" . number_format($energy, 5) . " kW </strong><br>";
@@ -95,6 +104,7 @@
                     echo "</div>";
                 }
                 ?>
+                
             </div>
         </div>
     </div>
@@ -103,7 +113,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Bootstrap 4 form validation
+        
         (function() {
             'use strict';
             window.addEventListener('load', function() {
